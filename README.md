@@ -15,12 +15,12 @@
 
 # Использование
 ```cpp
-bool begin();																					// Запустить
+	bool begin();																					// Запустить
 bool update();																				// Запросить и обновить время с сервера (если настал период обновления)
 bool forceUpdate();																		// Принудительно запросить и обновить время с сервера
 
-void setTimeOffset(int timeOffset);						        // Установить часовой пояс "в секундах"
-void setUpdateInterval(uint32_t updateInterval);		  // Установить интервал обновления "в миллисекундах"
+void setTimeOffset(int timeOffset);		// Установить часовой пояс "в секундах"
+void setUpdateInterval(uint32_t updateInterval);		// Установить интервал обновления "в миллисекундах"
 void setPoolServerName(const char* poolServerName);		// Установить сервер обновления (по умолчанию: ru.pool.ntp.org)
 void end();												                    // Остановить
 

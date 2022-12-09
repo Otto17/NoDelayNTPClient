@@ -1,9 +1,9 @@
 # NoDelayNTPClient
-# Форк NTPClient БЕЗ delay() и с доп. функциями
-От arduino-libraries "https://github.com/arduino-libraries/NTPClient"
+## Форк NTPClient БЕЗ delay() и с доп. функциями
+Источник форка arduino-libraries "https://github.com/arduino-libraries/NTPClient"
 
 
-## Документация по функциям
+## Как это работает
 "getEpochTime()" - возвращает время эпохи Unix, то есть секунды, прошедшие 
 с 00:00:00 UTC 1 января 1970 года (секунды координации игнорируются, каждый день считается имеющим 86400 секунд). 
 **Внимание**: Если вы установили смещение времени, это смещение времени будет добавлено к вашей отметке времени эпохи.

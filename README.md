@@ -15,9 +15,9 @@
 
 # Использование
 ```cpp
-bool begin();											                    // Запустить
-bool update();											                  // Запросить и обновить время с сервера (если настал период обновления)
-bool forceUpdate();										                // Принудительно запросить и обновить время с сервера
+bool begin();																					// Запустить
+bool update();																				// Запросить и обновить время с сервера (если настал период обновления)
+bool forceUpdate();																		// Принудительно запросить и обновить время с сервера
 
 void setTimeOffset(int timeOffset);						        // Установить часовой пояс "в секундах"
 void setUpdateInterval(uint32_t updateInterval);		  // Установить интервал обновления "в миллисекундах"
@@ -32,11 +32,11 @@ int getDate();											                  // Получить  дату
 int getMonth();											                  // Получить месяц
 int getYear();											                  // Получить  год
 
-uint32_t getEpochTime();						               		// Получить Unix время
+uint32_t getEpochTime();															// Получить Unix время
 
-String getFormattedTime();								            // Получить строку времени 'ЧЧ:ММ:СС'
-String getFormattedDate();								            // Получить строку даты 'ДД.ММ.ГГГГ'
-String getFullFormattedTime();							           // Получить строку даты и времени 'ДД:ММ:ГГГГ ЧЧ:ММ:СС'
+String getFormattedTime();														// Получить строку времени 'ЧЧ:ММ:СС'
+String getFormattedDate();														// Получить строку даты 'ДД.ММ.ГГГГ'
+String getFullFormattedTime();												// Получить строку даты и времени 'ДД:ММ:ГГГГ ЧЧ:ММ:СС'
 
 ```
 

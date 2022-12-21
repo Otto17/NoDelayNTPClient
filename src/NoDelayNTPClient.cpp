@@ -96,53 +96,53 @@ bool NTPClient::update() {
   if(!this->_udpSetup)
     this->begin();
 
-  // are we due to send a request?
+  // Мы должны отправить запрос?
   if(this->_lastUpdate > 0 && now < this->_lastUpdate + this->_updateInterval) {
-    // update isn't due. carry on.
+    // Обновление ещё не настало, продолжаем.
     return false;
   }
 
-  // we're due an update - have we sent a request and it has timed out,
-  // or not actually sent a request yet?
+  // Мы должны обновить - мы отправили запрос, и время ожидания истекло,
+  // или еще не отправили запрос?
   if(this->_requestSent == 0 || now > this->_requestSent + this->_requestDelay + REQUEST_TIMEOUT) {
-    // if we had already sent a request, let's bump up the _requestDelay so we don't constantly
-    // hammer a potentially down NTP server!
+    // если мы уже отправили запрос, давайте увеличим _requestDelay, чтобы не
+    // забить потенциально неработающий NTP-сервер!
     if(this->_requestSent > 0) {
         this->_requestDelay *= 2;
       if(this->_requestDelay > 30000)
         this->_requestDelay = 30000;
     } else {
-      // this is the first time we're attempting a send.
-      // purge any old packets that might be buffered
+      // Это первый раз, когда мы пытаемся отправить запрос.
+      // Очистить все старые пакеты, которые могут быть буферизованы
       while(this->_udp->parsePacket() != 0) {
         this->_udp->flush();
       }
     }
 
-    // Right. Send an NTP packet!
+    // Правильно. Отправляем NTP-пакет!
     // Serial.printf("Sending an NTP packet (timeout=%i)!\n", this->_requestDelay + REQUEST_TIMEOUT);
     this->sendNTPPacket();
 
-    // remember when we last sent a request
+    // Запомнить, когда мы в последний раз отправляли запрос
     this->_requestSent = now;
   }
 
-  // check for any replies!
+  // Проверяем ответы!
   int length = this->_udp->parsePacket();
   if( length > 0 ) {
-    Serial.println("Got an NTP reply!");
+   // Serial.println("Got an NTP reply!");
     this->_udp->read(this->_packetBuffer, NTP_PACKET_SIZE);
     this->_udp->flush();
 
     unsigned long highWord = word(this->_packetBuffer[40], this->_packetBuffer[41]);
     unsigned long lowWord = word(this->_packetBuffer[42], this->_packetBuffer[43]);
-    // combine the four bytes (two words) into a long integer
-    // this is NTP time (seconds since Jan 1 1900):
+    // Объединить четыре байта (два слова) в длинное целое число.
+    // Это время NTP (секунды с 1 января 1900 года):
     unsigned long secsSince1900 = highWord << 16 | lowWord;
 
     this->_currentEpoc = secsSince1900 - SEVENZYYEARS;
 
-    // cleanup and reset our state
+    // Очистить и сбросить наше состояние
     this->_requestSent = 0;
     this->_requestDelay = 1;
     this->_lastUpdate = now;
@@ -153,13 +153,13 @@ bool NTPClient::update() {
 }
 
 unsigned long NTPClient::getEpochTime() const {
-  return this->_timeOffset + // User offset
-         this->_currentEpoc + // Epoc returned by the NTP server
-         ((millis() - this->_lastUpdate) / 1000); // Time since last update
+  return this->_timeOffset + // Пользовательское смещение
+         this->_currentEpoc + // Эпоха возвращенная NTP-сервером
+         ((millis() - this->_lastUpdate) / 1000); // Время с момента последнего обновления
 }
 
 int NTPClient::getDay() const {
-  return (((this->getEpochTime()  / 86400L) + 4 ) % 7); //0 is Sunday
+  return (((this->getEpochTime()  / 86400L) + 4 ) % 7); //0 это воскресенье
 }
 int NTPClient::getHours() const {
   return ((this->getEpochTime()  % 86400L) / 3600);
@@ -204,22 +204,22 @@ void NTPClient::setPoolServerName(const char* poolServerName) {
 }
 
 void NTPClient::sendNTPPacket() {
-  // set all bytes in the buffer to 0
+  // Установить все байты в буфере на 0
   memset(this->_packetBuffer, 0, NTP_PACKET_SIZE);
-  // Initialize values needed to form NTP request
-  // (see URL above for details on the packets)
-  this->_packetBuffer[0] = 0b11100011;   // LI, Version, Mode
-  this->_packetBuffer[1] = 0;     // Stratum, or type of clock
-  this->_packetBuffer[2] = 6;     // Polling Interval
-  this->_packetBuffer[3] = 0xEC;  // Peer Clock Precision
-  // 8 bytes of zero for Root Delay & Root Dispersion
+  // Инициализировать значения, необходимые для формирования запроса NTP
+  // (см. URL-адрес выше для получения подробной информации о пакетах)
+  this->_packetBuffer[0] = 0b11100011;   // LI, версия, режим
+  this->_packetBuffer[1] = 0;     // Stratum, или тип часов
+  this->_packetBuffer[2] = 6;     // Интервал опроса
+  this->_packetBuffer[3] = 0xEC;  // Точность одноранговых часов
+  // 8 нулевых байтов для корневой задержки и корневой дисперсии
   this->_packetBuffer[12]  = 49;
   this->_packetBuffer[13]  = 0x4E;
   this->_packetBuffer[14]  = 49;
   this->_packetBuffer[15]  = 52;
 
-  // all NTP fields have been given values, now
-  // you can send a packet requesting a timestamp:
+  // Всем полям NTP были присвоены значения, теперь
+  // вы можете отправить пакет с запросом метки времени:
   if  (this->_poolServerName) {
     this->_udp->beginPacket(this->_poolServerName, 123);
   } else {
@@ -230,7 +230,6 @@ void NTPClient::sendNTPPacket() {
 }
 
 
-//Эти блоки добавил вручную, для получения форматированной даты
 //Получаем Год
 int NTPClient::getYear() const {
   time_t rawtime = this->getEpochTime();
@@ -300,3 +299,10 @@ String NTPClient::getFullFormattedTime() const {
 
    return dayStr + "-" + monthStr + "-" + yearStr + " " + hoursStr + ":" + minuteStr + ":" + secondStr;
 }
+
+
+//Получаем миллисекунды текущей секунды
+uint16_t NTPClient::getMs() const {
+    return (millis() - this->_lastUpdate) % 1000;
+}
+

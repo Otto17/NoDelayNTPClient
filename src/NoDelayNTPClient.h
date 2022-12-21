@@ -19,13 +19,13 @@ class NTPClient {
     int           _port           = NTP_DEFAULT_LOCAL_PORT;
     long          _timeOffset     = 0;
 
-    unsigned long _updateInterval = 60000;  // In ms
+    unsigned long _updateInterval = 60000;  // В мс
 
-    unsigned long _currentEpoc    = 0;      // In s
-    unsigned long _lastUpdate     = 0;      // In ms
+    unsigned long _currentEpoc    = 0;      // В секундах
+    unsigned long _lastUpdate     = 0;      // В мс
 
-    unsigned long _requestSent    = 0;      // in ms (when the last request was sent)
-    unsigned long _requestDelay   = 1;      // in ms (a cumulative delay to slow down constant failures)
+    unsigned long _requestSent    = 0;      // В мс (когда был отправлен последний запрос)
+    unsigned long _requestDelay   = 1;      // В мс (кумулятивная задержка для замедления постоянных сбоев)
 
     byte          _packetBuffer[NTP_PACKET_SIZE];
 
@@ -42,34 +42,34 @@ class NTPClient {
     NTPClient(UDP& udp, IPAddress poolServerIP, long timeOffset, unsigned long updateInterval);
 
     /**
-     * Set time server name
+     * Установить имя сервера времени
      *
      * @param poolServerName
      */
     void setPoolServerName(const char* poolServerName);
 
     /**
-     * Starts the underlying UDP client with the default local port
+     * Запускает базовый UDP-клиент с локальным портом по умолчанию
      */
     void begin();
 
     /**
-     * Starts the underlying UDP client with the specified local port
+     * Запускает базовый UDP-клиент с указанным локальным портом
      */
     void begin(int port);
 
     /**
-     * This should be called in the main loop of your application. By default an update from the NTP Server is only
-     * made every 60 seconds. This can be configured in the NTPClient constructor.
+     * Это должно вызываться в основном цикле вашего приложения. По умолчанию обновление с NTP-сервера
+     * производится каждые 60 секунд. Это можно настроить в конструкторе NTPClient
      *
-     * @return true on success, false on failure
+     * @return true в случае успеха, false в случае неудачи
      */
     bool update();
 
     /**
-     * This will force the update from the NTP Server.
+     * Это приведет к принудительному обновлению с NTP-сервера
      *
-     * @return true on success, false on failure
+     * @return true в случае успеха, false в случае неудачи
      */
     bool forceUpdate();
 
@@ -79,32 +79,31 @@ class NTPClient {
     int getSeconds() const;
 
     /**
-     * Changes the time offset. Useful for changing timezones dynamically
+     * Изменяет смещение времени. Полезно для динамической смены часовых поясов
      */
     void setTimeOffset(int timeOffset);
 
     /**
-     * Set the update interval to another frequency. E.g. useful when the
-     * timeOffset should not be set in the constructor
+     * Установите интервал обновления на другую частоту. Например. полезно, когда
+     * timeOffset не должен быть установлен в конструкторе
      */
     void setUpdateInterval(unsigned long updateInterval);
 
     /**
-     * @return time formatted like 'ЧЧ:ММ:СС'
+     * @return время отформатировано как 'ЧЧ:ММ:СС'
      */
     String getFormattedTime() const;
 
     /**
-     * @return time in seconds since Jan. 1, 1970
+     * @return время в секундах с 1 января 1970 г.
      */
     unsigned long getEpochTime() const;
 
     /**
-     * Stops the underlying UDP client
+     * Останавливает базовый UDP-клиент
      */
     void end();
 	
-	//Эти блоки добавил вручную, для получения форматированной даты
 	/**
      * @return Год (int)
      */
@@ -119,7 +118,12 @@ class NTPClient {
      * @return Дату (int)
      */
 	int getDate() const;
-	
+
+	/**
+     * @return Миллисекунды (uint16_t)
+     */
+	uint16_t getMs() const;
+
 	/**
      * @return Форматированную дату (String) 'ДД.ММ.ГГГГ'
      */

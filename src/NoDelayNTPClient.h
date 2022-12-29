@@ -14,6 +14,8 @@ class NTPClient {
     UDP*          _udp;
     bool          _udpSetup       = false;
 
+	bool		  _lastUpdNTP     = false;
+
     const char*   _poolServerName = "ru.pool.ntp.org"; // Сервер по умолчанию
     IPAddress     _poolServerIP;
     int           _port           = NTP_DEFAULT_LOCAL_PORT;
@@ -32,6 +34,7 @@ class NTPClient {
     void          sendNTPPacket();
 
   public:
+
     NTPClient(UDP& udp);
     NTPClient(UDP& udp, long timeOffset);
     NTPClient(UDP& udp, const char* poolServerName);
@@ -133,4 +136,9 @@ class NTPClient {
      * @return Форматированную дату и время (String) 'DD:MM:YYYY ЧЧ:ММ:СС'
      */
     String getFullFormattedTime() const; 
+	
+	/**
+     * @return Форматированную дату и время последней успешной синхронизации (String) 'DD:MM:YYYY ЧЧ:ММ:СС'
+     */
+    String getFullFormLastUpdate();
 };

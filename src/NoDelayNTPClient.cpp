@@ -131,6 +131,7 @@ bool NTPClient::update() {
   int length = this->_udp->parsePacket();
   if( length > 0 ) {
    // Serial.println("Got an NTP reply!");
+    this->_lastUpdNTP = true;
     this->_udp->read(this->_packetBuffer, NTP_PACKET_SIZE);
     this->_udp->flush();
 
@@ -306,3 +307,14 @@ uint16_t NTPClient::getMs() const {
     return (millis() - this->_lastUpdate) % 1000;
 }
 
+
+//Получаем дату и время последней успешной синхронизации (всегда возвращает дату и время последней синхронизации)
+String NTPClient::getFullFormLastUpdate() {
+	static String NewData;
+	if(this->_lastUpdNTP == true) {
+	NewData = this->getFullFormattedTime();
+	this->_lastUpdNTP = false;
+	}
+
+	return NewData;
+}
